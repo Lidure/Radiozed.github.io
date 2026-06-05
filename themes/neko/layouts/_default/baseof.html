@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}</title>
+    <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+    <div class="bg-particles" id="particles"></div>
+    <div class="cat-ears">
+        <div class="cat-ear left"></div>
+        <div class="cat-ear right"></div>
+    </div>
+    <nav>
+        <a href="/" class="logo">{{ .Site.Title }}</a>
+        <ul class="nav-links">
+            <li><a href="/posts">文章</a></li>
+            <li><a href="#about">关于</a></li>
+        </ul>
+    </nav>
+    <main>
+        {{ block "main" . }}{{ end }}
+    </main>
+    <div class="cat-tail"></div>
+    <footer>
+        <div class="social-links">
+            {{ with .Site.Params.github }}<a href="{{ . }}" target="_blank">🐱</a>{{ end }}
+        </div>
+        <p class="footer-text">Made with <span>♥</span> by {{ .Site.Params.author }} · 喵~ 🐾</p>
+    </footer>
+    <script>
+    (function() {
+        const c = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.width = (Math.random() * 6 + 2) + 'px';
+            p.style.height = p.style.width;
+            p.style.background = Math.random() > 0.7 ? 'rgba(255,107,157,' + (Math.random()*0.5+0.3) + ')' : 'rgba(155,89,182,' + (Math.random()*0.5+0.2) + ')';
+            p.style.animationDuration = (Math.random() * 20 + 15) + 's';
+            p.style.animationDelay = (Math.random() * 20) + 's';
+            c.appendChild(p);
+        }
+    })();
+    </script>
+</body>
+</html>

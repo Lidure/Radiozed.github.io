@@ -10,7 +10,9 @@
       "Bash(git commit *)",
       "WebSearch",
       "Bash(git rm *)",
-      "Bash(hugo --version)"
+      "Bash(hugo --version)",
+      "Bash(git ls-remote *)",
+      "Bash(git subtree *)"
     ]
   }
 }
