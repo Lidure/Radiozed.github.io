@@ -1,9 +1,0 @@
-name = "Neko"
-license = "MIT"
-min_version = "0.110.0"
-homepage = "https://github.com/Radiozed"
-download_url = "https://github.com/Radiozed"
-description = "猫娘风格主题 - Neko Style Theme for Hugo"
-tags = ["anime", "cat", "neko", "maiden", "pink", "purple"]
-author = "Lidure"
-features = ["responsive", "dark mode", "particles"]
