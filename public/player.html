@@ -95,14 +95,17 @@
     const volume = document.getElementById('volume');
     
     // 恢复状态
-    const savedVolume = localStorage.getItem('bgmVolume');
-    const savedPlaying = localStorage.getItem('bgmPlaying');
+    const savedVolume = sessionStorage.getItem('bgmVolume');
+    const savedPlaying = sessionStorage.getItem('bgmPlaying');
+    const savedTime = sessionStorage.getItem('bgmTime');
     
     audio.volume = savedVolume ? parseFloat(savedVolume) : 0.5;
     volume.value = audio.volume * 100;
     
+    // 恢复播放时间
+    if (savedTime) audio.currentTime = parseFloat(savedTime);
+    
     let isPlaying = false;
-    let hasInteracted = false;
     
     function updateUI(playing) {
       toggle.textContent = playing ? '🎶' : '🎵';
@@ -111,25 +114,40 @@
     
     function play() {
       audio.volume = volume.value / 100;
-      audio.play().then(() => {
-        isPlaying = true;
-        updateUI(true);
-        localStorage.setItem('bgmPlaying', 'true');
-      }).catch(() => {
-        // 如果失败，等待用户交互
-        hasInteracted = true;
-        localStorage.setItem('bgmPlaying', 'true');
-      });
+      const promise = audio.play();
+      if (promise !== undefined) {
+        promise.then(() => {
+          isPlaying = true;
+          updateUI(true);
+          sessionStorage.setItem('bgmPlaying', 'true');
+        }).catch(() => {
+          // 如果失败，等待用户交互
+          const tryPlay = () => {
+            audio.play().then(() => {
+              isPlaying = true;
+              updateUI(true);
+              sessionStorage.setItem('bgmPlaying', 'true');
+            });
+            document.removeEventListener('click', tryPlay);
+          };
+          document.addEventListener('click', tryPlay, { once: true });
+        });
+      }
     }
     
     function pause() {
       audio.pause();
       isPlaying = false;
       updateUI(false);
-      localStorage.setItem('bgmPlaying', 'false');
+      sessionStorage.setItem('bgmPlaying', 'false');
     }
     
-    // 如果之前是播放状态或没有记录，恢复播放
+    // 保存播放时间
+    audio.addEventListener('timeupdate', () => {
+      sessionStorage.setItem('bgmTime', audio.currentTime.toString());
+    });
+    
+    // 如果之前是播放状态，自动播放
     if (savedPlaying !== 'false') {
       play();
     }
@@ -144,7 +162,7 @@
     // 音量控制
     volume.addEventListener('input', () => {
       audio.volume = volume.value / 100;
-      localStorage.setItem('bgmVolume', audio.volume.toString());
+      sessionStorage.setItem('bgmVolume', audio.volume.toString());
     });
   </script>
 </body>
