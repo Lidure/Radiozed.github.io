@@ -2,12 +2,9 @@ import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   output: 'static',
-  build: {
-    format: 'file'
-  },
   server: {
     host: true,
     port: 4333
   },
-  integrations: []
+  base: '/'
 });
