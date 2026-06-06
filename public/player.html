@@ -96,10 +96,13 @@
     
     // 恢复状态
     const savedVolume = localStorage.getItem('bgmVolume');
+    const savedPlaying = localStorage.getItem('bgmPlaying');
+    
     audio.volume = savedVolume ? parseFloat(savedVolume) : 0.5;
     volume.value = audio.volume * 100;
     
     let isPlaying = false;
+    let hasInteracted = false;
     
     function updateUI(playing) {
       toggle.textContent = playing ? '🎶' : '🎵';
@@ -111,16 +114,11 @@
       audio.play().then(() => {
         isPlaying = true;
         updateUI(true);
+        localStorage.setItem('bgmPlaying', 'true');
       }).catch(() => {
         // 如果失败，等待用户交互
-        const tryPlay = () => {
-          audio.play().then(() => {
-            isPlaying = true;
-            updateUI(true);
-          });
-          document.removeEventListener('click', tryPlay);
-        };
-        document.addEventListener('click', tryPlay, { once: true });
+        hasInteracted = true;
+        localStorage.setItem('bgmPlaying', 'true');
       });
     }
     
@@ -128,10 +126,13 @@
       audio.pause();
       isPlaying = false;
       updateUI(false);
+      localStorage.setItem('bgmPlaying', 'false');
     }
     
-    // 立即自动播放
-    play();
+    // 如果之前是播放状态或没有记录，恢复播放
+    if (savedPlaying !== 'false') {
+      play();
+    }
     
     // 切换按钮
     toggle.addEventListener('click', (e) => {
