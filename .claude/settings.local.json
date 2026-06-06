@@ -12,7 +12,9 @@
       "Bash(git rm *)",
       "Bash(hugo --version)",
       "Bash(git ls-remote *)",
-      "Bash(git subtree *)"
+      "Bash(git subtree *)",
+      "WebFetch(domain:github.com)",
+      "Bash(gh run *)"
     ]
   }
 }
